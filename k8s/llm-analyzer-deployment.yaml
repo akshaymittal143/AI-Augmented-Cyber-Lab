@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llm-analyzer
+  namespace: ai-cyber-lab
+  labels:
+    app: llm-analyzer
+    component: analysis-engine
+    version: "1.0.0"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: llm-analyzer
+  template:
+    metadata:
+      labels:
+        app: llm-analyzer
+        component: analysis-engine
+    spec:
+      serviceAccountName: llm-analyzer
+      containers:
+      - name: llm-analyzer
+        image: ai-cyber-lab/llm-analyzer:1.0.0
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ai-api-keys
+              key: openai-api-key
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: MODEL_NAME
+          value: "gpt-4"
+        - name: REDIS_URL
+          value: "redis://redis-service:6379/0"
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 2
+            memory: 4Gi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp-volume
+          mountPath: /tmp
+        - name: cache-volume
+          mountPath: /app/cache
+      volumes:
+      - name: tmp-volume
+        emptyDir: {}
+      - name: cache-volume
+        emptyDir:
+          sizeLimit: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llm-analyzer-service
+  namespace: ai-cyber-lab
+  labels:
+    app: llm-analyzer
+spec:
+  selector:
+    app: llm-analyzer
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: llm-analyzer
+  namespace: ai-cyber-lab
+  labels:
+    app: llm-analyzer
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: ai-cyber-lab
+  name: llm-analyzer-role
+rules:
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+  resourceNames: [] # Restrict to specific pods if needed
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: llm-analyzer-binding
+  namespace: ai-cyber-lab
+subjects:
+- kind: ServiceAccount
+  name: llm-analyzer
+  namespace: ai-cyber-lab
+roleRef:
+  kind: Role
+  name: llm-analyzer-role
+  apiGroup: rbac.authorization.k8s.io
