@@ -1,0 +1,56 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "AI-Augmented Cyber Lab: Enhancing Cloud-Native Security Education"
+abstract: >-
+  A comprehensive educational platform integrating Large Language Models (LLMs), 
+  Reinforcement Learning (RL) agents, and realistic threat simulation for 
+  cloud-native security training. Achieves 94% accuracy in security analysis
+  and provides adaptive pedagogical scaffolding for cybersecurity education.
+authors:
+  - family-names: "Mittal"
+    given-names: "Akshay"
+    orcid: "https://orcid.org/0009-0008-5233-9248"
+    email: "akshay.mittal@ieee.org"
+    affiliation: "IEEE"
+repository-code: "https://github.com/akshaymittal143/AI-Augmented-Cyber-Lab"
+url: "https://github.com/akshaymittal143/AI-Augmented-Cyber-Lab"
+license: MIT
+keywords:
+  - "cybersecurity education"
+  - "artificial intelligence"
+  - "machine learning"
+  - "reinforcement learning"
+  - "large language models"
+  - "cloud security"
+  - "kubernetes"
+  - "container security"
+  - "educational technology"
+  - "adaptive learning"
+  - "threat simulation"
+  - "MITRE ATT&CK"
+version: "1.0.0"
+date-released: "2024-08-10"
+preferred-citation:
+  type: conference-paper
+  title: "AI-Augmented Cyber Labs: Enhancing Cloud-Native Security Education through Adaptive Feedback and Threat Simulation"
+  authors:
+    - family-names: "Mittal"
+      given-names: "Akshay"
+      email: "akshay.mittal@ieee.org"
+  collection-title: "Proceedings of the ACM Conference on Computer Science Education"
+  publisher: "ACM"
+  year: 2024
+  abstract: >-
+    Modern software development is increasingly driven by cloud-native technologies, 
+    yet cybersecurity education has not kept pace. This paper presents an AI-augmented 
+    cyber lab that integrates semantic artifact analysis via Large Language Models (LLMs), 
+    adaptive pedagogical control via Reinforcement Learning (RL), and realistic threat 
+    simulation into a unified, event-driven learning platform. The system achieves 94% 
+    accuracy in security analysis and demonstrates effective adaptive scaffolding for 
+    cloud-native security education.
+  keywords:
+    - "cybersecurity education"
+    - "AI in education"
+    - "cloud security"
+    - "adaptive learning"
