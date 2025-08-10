@@ -31,37 +31,38 @@ All components communicate via an event-driven architecture deployed on Kubernet
 
 ```bash
 # Clone the repository
-git clone <repository-url>
-cd ai-augmented-cyber-lab
+git clone https://github.com/akshaymittal143/AI-Augmented-Cyber-Lab.git
+cd AI-Augmented-Cyber-Lab
 
 # Install dependencies
 pip install -r requirements.txt
 
 # Set up Kubernetes cluster (using kind for local development)
-./scripts/setup-cluster.sh
+# Note: setup-cluster.sh script to be added in future release
+kind create cluster --name cyber-lab
 
 # Deploy the system
 kubectl apply -f k8s/
 
-# Run the evaluation
-python evaluation/run_evaluation.py
+# Run the evaluation (requires dataset - see evaluation section)
+# python evaluation/run_evaluation.py
 ```
 
 ## 🔧 Components
 
-### LLM Analyzer (`llm-analyzer/`)
+### LLM Analyzer (`src/llm_analyzer/`)
 - Security misconfiguration detection
 - Few-shot prompt engineering for cloud-native artifacts
 - Schema validation and expert review integration
 - 94% accuracy on real-world artifact corpus
 
-### RL Hint Agent (`rl-agent/`)
+### RL Hint Agent (`src/rl_agent/`)
 - Adaptive scaffolding based on student competence
 - Q-learning with custom reward functions
 - Multi-armed bandit for hint timing optimization
 - A/B testing against expert-authored flows
 
-### Threat Simulation Engine (`threat-simulation/`)
+### Threat Simulation Engine (`src/threat_simulation/`)
 - Production-grade attack playbooks
 - MITRE ATT&CK framework alignment
 - Container escape and privilege escalation scenarios
@@ -90,11 +91,65 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-3. **Set environment variables:**
+3. **Configure environment variables:**
 ```bash
 cp .env.example .env
-# Edit .env with your configuration
+# Edit .env with your configuration - see below for required settings
 ```
+
+### 🔧 Environment Configuration
+
+The system requires several environment variables to be configured in `.env`. Here are the key settings you need to update:
+
+#### **Required - AI Model Configuration** ⚠️
+```bash
+# REQUIRED: Get from OpenAI (https://platform.openai.com/api-keys)
+OPENAI_API_KEY=your-actual-openai-api-key-here
+
+# Optional: Anthropic API for alternative models
+ANTHROPIC_API_KEY=your-anthropic-api-key-here
+
+# Model settings (defaults shown)
+LLM_MODEL=gpt-4
+LLM_TEMPERATURE=0.1
+LLM_MAX_TOKENS=2048
+```
+
+#### **Database Configuration**
+```bash
+# PostgreSQL for persistent storage
+DATABASE_URL=postgresql://user:password@localhost:5432/cyber_lab
+
+# Redis for caching and session management
+REDIS_URL=redis://localhost:6379/0
+```
+
+#### **Security Settings** ⚠️
+```bash
+# REQUIRED: Generate a secure random key
+SECRET_KEY=your-secure-secret-key-here
+JWT_ALGORITHM=HS256
+JWT_EXPIRE_MINUTES=30
+```
+
+#### **System Configuration**
+```bash
+# Kubernetes settings
+KUBECONFIG_PATH=~/.kube/config
+NAMESPACE=ai-cyber-lab
+CLUSTER_NAME=cyber-lab-cluster
+
+# Lab capacity and behavior
+MAX_STUDENTS_PER_LAB=50
+SESSION_TIMEOUT_MINUTES=60
+HINT_COOLDOWN_SECONDS=30
+
+# Development settings
+DEBUG=true
+LOG_LEVEL=INFO
+```
+
+> **⚠️ Important**: You MUST set `OPENAI_API_KEY` to use the LLM analyzer. Without this, the core security analysis functionality will not work.
 
 4. **Set up Kubernetes cluster:**
 ```bash
@@ -244,8 +299,7 @@ If you use this code in your research, please cite our paper:
 ## 📞 Contact
 
 For questions or support, please open an issue or contact:
-- Primary Author: [email]
-- Research Group: [website]
+- Primary Author: akshay.mittal@ieee.org
 
 ## 🙏 Acknowledgments
 
