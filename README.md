@@ -6,7 +6,7 @@
 
 This repository contains the complete implementation of the AI-Augmented Cyber Lab system for enhancing cloud-native security education through adaptive feedback and threat simulation, as described in our research paper.
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [System Architecture](#system-architecture)
 - [Quick Start](#quick-start)
@@ -17,7 +17,7 @@ This repository contains the complete implementation of the AI-Augmented Cyber L
 - [Contributing](#contributing)
 - [Citation](#citation)
 
-## 🏗️ System Architecture
+## System Architecture
 
 The AI-augmented cyber lab integrates three core components:
 
@@ -27,7 +27,7 @@ The AI-augmented cyber lab integrates three core components:
 
 All components communicate via an event-driven architecture deployed on Kubernetes clusters.
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Clone the repository
@@ -48,7 +48,7 @@ kubectl apply -f k8s/
 # python evaluation/run_evaluation.py
 ```
 
-## 🔧 Components
+## Components
 
 ### LLM Analyzer (`src/llm_analyzer/`)
 - Security misconfiguration detection
@@ -68,7 +68,7 @@ kubectl apply -f k8s/
 - Container escape and privilege escalation scenarios
 - Kubernetes RBAC bypass techniques
 
-## 📦 Installation
+## Installation
 
 ### Prerequisites
 
@@ -97,11 +97,11 @@ cp .env.example .env
 # Edit .env with your configuration - see below for required settings
 ```
 
-### 🔧 Environment Configuration
+### Environment Configuration
 
 The system requires several environment variables to be configured in `.env`. Here are the key settings you need to update:
 
-#### **Required - AI Model Configuration** ⚠️
+#### **Required - AI Model Configuration**
 ```bash
 # REQUIRED: Get from OpenAI (https://platform.openai.com/api-keys)
 OPENAI_API_KEY=your-actual-openai-api-key-here
@@ -124,7 +124,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/cyber_lab
 REDIS_URL=redis://localhost:6379/0
 ```
 
-#### **Security Settings** ⚠️
+#### **Security Settings**
 ```bash
 # REQUIRED: Generate a secure random key
 SECRET_KEY=your-secure-secret-key-here
@@ -149,7 +149,7 @@ DEBUG=true
 LOG_LEVEL=INFO
 ```
 
-> **⚠️ Important**: You MUST set `OPENAI_API_KEY` to use the LLM analyzer. Without this, the core security analysis functionality will not work.
+> **Important**: You MUST set `OPENAI_API_KEY` to use the LLM analyzer. Without this, the core security analysis functionality will not work.
 
 4. **Set up Kubernetes cluster:**
 ```bash
@@ -160,7 +160,7 @@ LOG_LEVEL=INFO
 ./scripts/setup-production-cluster.sh
 ```
 
-## 🎯 Usage
+## Usage
 
 ### Running Individual Components
 
@@ -192,7 +192,7 @@ kubectl get pods -n ai-cyber-lab --watch
 
 Access the student interface at `http://localhost:8080` after deployment.
 
-## 📊 Evaluation
+## Evaluation
 
 The repository includes comprehensive evaluation scripts and datasets:
 
@@ -220,7 +220,7 @@ python evaluation/threat_evaluation.py \
   --output results/threat-realism.json
 ```
 
-## 📚 Lab Scenarios
+## Lab Scenarios
 
 The system includes four comprehensive lab modules:
 
@@ -235,7 +235,7 @@ Each module includes:
 - Automated assessment criteria
 - Real-time threat simulation
 
-## 🔬 Research Validation
+## Research Validation
 
 This implementation reproduces the results reported in our paper:
 
@@ -244,7 +244,7 @@ This implementation reproduces the results reported in our paper:
 - **System Scalability**: Tested on multi-node Kubernetes clusters
 - **Educational Effectiveness**: Validated through expert review and simulation
 
-## 🛠️ Development
+## Development
 
 ### Running Tests
 ```bash
@@ -268,7 +268,7 @@ black src/
 mypy src/
 ```
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
@@ -278,11 +278,11 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 4. Add tests
 5. Submit a pull request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 📖 Citation
+## Citation
 
 If you use this code in your research, please cite our paper:
 
@@ -296,7 +296,7 @@ If you use this code in your research, please cite our paper:
 }
 ```
 
-## 📞 Contact
+## Contact
 
 For questions or support, please open an issue or contact:
 - Primary Author: akshay.mittal@ieee.org
