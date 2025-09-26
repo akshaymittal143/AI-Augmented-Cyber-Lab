@@ -12,7 +12,17 @@ authors:
     given-names: "Akshay"
     orcid: "https://orcid.org/0009-0008-5233-9248"
     email: "akshay.mittal@ieee.org"
-    affiliation: "IEEE"
+    affiliation: "University of the Cumberlands"
+  - family-names: "Shah"
+    given-names: "Harsh"
+    orcid: "https://orcid.org/0009-0005-1900-8197"
+    email: "hs634@cornell.edu"
+    affiliation: "Cornell University"
+  - family-names: "Keshap"
+    given-names: "Pragya"
+    orcid: "https://orcid.org/0009-0002-6355-939X"
+    email: "pragyakeshap@ieee.org"
+    affiliation: "Senior IEEE Member"
 repository-code: "https://github.com/akshaymittal143/AI-Augmented-Cyber-Lab"
 url: "https://github.com/akshaymittal143/AI-Augmented-Cyber-Lab"
 license: MIT
@@ -38,17 +48,28 @@ preferred-citation:
     - family-names: "Mittal"
       given-names: "Akshay"
       email: "akshay.mittal@ieee.org"
+      affiliation: "University of the Cumberlands"
+    - family-names: "Shah"
+      given-names: "Harsh"
+      email: "hs634@cornell.edu"
+      affiliation: "Cornell University"
+    - family-names: "Keshap"
+      given-names: "Pragya"
+      email: "pragyakeshap@ieee.org"
+      affiliation: "Senior IEEE Member"
   collection-title: "Proceedings of the ACM Conference on Computer Science Education"
   publisher: "ACM"
-  year: 2024
+  year: 2025
   abstract: >-
     Modern software development is increasingly driven by cloud-native technologies, 
-    yet cybersecurity education has not kept pace. This paper presents an AI-augmented 
-    cyber lab that integrates semantic artifact analysis via Large Language Models (LLMs), 
-    adaptive pedagogical control via Reinforcement Learning (RL), and realistic threat 
-    simulation into a unified, event-driven learning platform. The system achieves 94% 
-    accuracy in security analysis and demonstrates effective adaptive scaffolding for 
-    cloud-native security education.
+    yet cybersecurity education has not kept pace. Traditional training environments 
+    often rely on static, pre-configured labs that fail to capture the complexity of 
+    real-world cloud infrastructures or adapt to individual learner needs. This paper 
+    presents an AI-augmented cyber lab that integrates semantic artifact analysis via 
+    Large Language Models (LLMs), adaptive pedagogical control via Reinforcement Learning (RL), 
+    and realistic threat simulation into a unified, event-driven learning platform. 
+    The system achieves 92% F1-score in security analysis and demonstrates effective 
+    adaptive scaffolding for cloud-native security education.
   keywords:
     - "cybersecurity education"
     - "AI in education"

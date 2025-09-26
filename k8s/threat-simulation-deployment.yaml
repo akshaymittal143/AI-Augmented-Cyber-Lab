@@ -1,0 +1,128 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: threat-simulation-engine
+  namespace: ai-cyber-lab
+  labels:
+    app: threat-simulation-engine
+    component: simulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: threat-simulation-engine
+  template:
+    metadata:
+      labels:
+        app: threat-simulation-engine
+        component: simulation
+    spec:
+      serviceAccountName: threat-simulation-sa
+      containers:
+      - name: threat-simulation-engine
+        image: ai-cyber-lab/threat-simulation:latest
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: KUBECONFIG
+          value: "/var/run/secrets/kubernetes.io/serviceaccount"
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: SIMULATION_MODE
+          value: "safe"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+        volumeMounts:
+        - name: playbook-storage
+          mountPath: /playbooks
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+      volumes:
+      - name: playbook-storage
+        configMap:
+          name: threat-playbooks
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 2000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: threat-simulation-service
+  namespace: ai-cyber-lab
+  labels:
+    app: threat-simulation-engine
+spec:
+  selector:
+    app: threat-simulation-engine
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: threat-simulation-sa
+  namespace: ai-cyber-lab
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: ai-cyber-lab
+  name: threat-simulation-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "configmaps", "secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["networking.k8s.io"]
+  resources: ["networkpolicies"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: threat-simulation-rolebinding
+  namespace: ai-cyber-lab
+subjects:
+- kind: ServiceAccount
+  name: threat-simulation-sa
+  namespace: ai-cyber-lab
+roleRef:
+  kind: Role
+  name: threat-simulation-role
+  apiGroup: rbac.authorization.k8s.io

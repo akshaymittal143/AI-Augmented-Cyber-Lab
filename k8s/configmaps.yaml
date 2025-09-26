@@ -1,0 +1,148 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-cyber-lab-config
+  namespace: ai-cyber-lab
+data:
+  redis-url: "redis://redis-service:6379/0"
+  database-url: "postgresql://postgres:password@postgres-service:5432/cyber_lab"
+  llm-model: "gpt-4"
+  llm-temperature: "0.1"
+  max-students-per-lab: "50"
+  session-timeout-minutes: "60"
+  hint-cooldown-seconds: "30"
+  log-level: "INFO"
+  debug: "false"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: threat-playbooks
+  namespace: ai-cyber-lab
+data:
+  container-escape.yaml: |
+    name: "Container Escape Attack"
+    description: "Simulation of container escape vulnerability exploitation"
+    mitre_techniques:
+      - "T1611 - Escape to Host"
+      - "T1055 - Process Injection"
+    steps:
+      - name: "Initial Access"
+        action: "deploy_vulnerable_pod"
+        parameters:
+          image: "alpine:latest"
+          privileged: true
+          runAsUser: 0
+      - name: "Privilege Escalation"
+        action: "execute_escape_command"
+        parameters:
+          command: "nsenter -t 1 -m -u -i -n -p"
+      - name: "Persistence"
+        action: "create_backdoor"
+        parameters:
+          location: "/tmp/.backdoor"
+    expected_outcome: "Successful container escape and host access"
+    safety_checks:
+      - "Verify container isolation"
+      - "Monitor host system changes"
+      - "Limit execution time"
+  rbac-bypass.yaml: |
+    name: "RBAC Privilege Escalation"
+    description: "Simulation of Kubernetes RBAC bypass and privilege escalation"
+    mitre_techniques:
+      - "T1078 - Valid Accounts"
+      - "T1484 - Domain Policy Modification"
+    steps:
+      - name: "Service Account Discovery"
+        action: "list_service_accounts"
+        parameters:
+          namespace: "default"
+      - name: "Permission Enumeration"
+        action: "check_permissions"
+        parameters:
+          service_account: "default"
+      - name: "Privilege Escalation"
+        action: "escalate_privileges"
+        parameters:
+          target_role: "cluster-admin"
+    expected_outcome: "Successful privilege escalation to cluster-admin"
+    safety_checks:
+      - "Verify RBAC policies"
+      - "Monitor permission changes"
+      - "Limit scope to test namespace"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llm-prompts
+  namespace: ai-cyber-lab
+data:
+  dockerfile-analysis.yaml: |
+    system_prompt: |
+      You are a cybersecurity expert analyzing Dockerfile configurations for security vulnerabilities.
+      Identify security issues and provide educational feedback for learning purposes.
+      
+      Common issues to look for:
+      - Running as root user
+      - Using latest tags
+      - Overly permissive file permissions
+      - Missing security scanning
+      - Exposed sensitive information
+      
+      Provide specific, actionable feedback that helps students learn.
+    user_prompt_template: |
+      Analyze this Dockerfile for security vulnerabilities:
+      
+      {dockerfile_content}
+      
+      Provide:
+      1. List of security issues found
+      2. Severity level for each issue
+      3. Recommended fixes
+      4. Educational explanation
+  kubernetes-analysis.yaml: |
+    system_prompt: |
+      You are a Kubernetes security expert analyzing YAML manifests for security misconfigurations.
+      Focus on RBAC, network policies, and container security settings.
+      
+      Key areas to examine:
+      - Service account permissions
+      - Container security contexts
+      - Network policy configurations
+      - Resource limits and requests
+      - Image security
+      
+      Provide clear, educational feedback.
+    user_prompt_template: |
+      Analyze this Kubernetes manifest for security issues:
+      
+      {manifest_content}
+      
+      Provide:
+      1. Security misconfigurations identified
+      2. Risk assessment for each issue
+      3. Remediation steps
+      4. Best practices explanation
+  terraform-analysis.yaml: |
+    system_prompt: |
+      You are a cloud security expert analyzing Terraform configurations for security vulnerabilities.
+      Focus on cloud resource security, access controls, and data protection.
+      
+      Areas to examine:
+      - IAM policies and roles
+      - Network security groups
+      - Data encryption settings
+      - Public access configurations
+      - Resource permissions
+      
+      Provide educational guidance for secure cloud deployments.
+    user_prompt_template: |
+      Analyze this Terraform configuration for security issues:
+      
+      {terraform_content}
+      
+      Provide:
+      1. Security vulnerabilities found
+      2. Impact assessment
+      3. Secure configuration recommendations
+      4. Cloud security best practices

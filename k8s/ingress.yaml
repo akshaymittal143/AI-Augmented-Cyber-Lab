@@ -1,0 +1,122 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ai-cyber-lab-ingress
+  namespace: ai-cyber-lab
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - ai-cyber-lab.example.com
+    secretName: ai-cyber-lab-tls
+  rules:
+  - host: ai-cyber-lab.example.com
+    http:
+      paths:
+      - path: /api/llm
+        pathType: Prefix
+        backend:
+          service:
+            name: llm-analyzer-service
+            port:
+              number: 8080
+      - path: /api/rl
+        pathType: Prefix
+        backend:
+          service:
+            name: rl-hint-agent-service
+            port:
+              number: 8080
+      - path: /api/threat
+        pathType: Prefix
+        backend:
+          service:
+            name: threat-simulation-service
+            port:
+              number: 8080
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-interface-service
+            port:
+              number: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-interface-service
+  namespace: ai-cyber-lab
+  labels:
+    app: web-interface
+spec:
+  selector:
+    app: web-interface
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000
+    protocol: TCP
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-interface
+  namespace: ai-cyber-lab
+  labels:
+    app: web-interface
+    component: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web-interface
+  template:
+    metadata:
+      labels:
+        app: web-interface
+        component: frontend
+    spec:
+      containers:
+      - name: web-interface
+        image: ai-cyber-lab/web-interface:latest
+        ports:
+        - containerPort: 3000
+          name: http
+        env:
+        - name: API_BASE_URL
+          value: "https://ai-cyber-lab.example.com/api"
+        - name: NODE_ENV
+          value: "production"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL

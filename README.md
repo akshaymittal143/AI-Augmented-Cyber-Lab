@@ -54,7 +54,7 @@ kubectl apply -f k8s/
 - Security misconfiguration detection
 - Few-shot prompt engineering for cloud-native artifacts
 - Schema validation and expert review integration
-- 94% accuracy on real-world artifact corpus
+- 92% F1-score on real-world artifact corpus
 
 ### RL Hint Agent (`src/rl_agent/`)
 - Adaptive scaffolding based on student competence
@@ -93,7 +93,7 @@ pip install -r requirements.txt
 
 3. **Configure environment variables:**
 ```bash
-cp .env.example .env
+cp env.example .env
 # Edit .env with your configuration - see below for required settings
 ```
 
@@ -239,10 +239,10 @@ Each module includes:
 
 This implementation reproduces the results reported in our paper:
 
-- **LLM Analyzer Accuracy**: 94% on 1,500 real-world artifacts
+- **LLM Analyzer Accuracy**: 92% F1-score on 1,500 real-world artifacts
 - **RL Agent Performance**: >85% confidence in adaptive hint delivery
 - **System Scalability**: Tested on multi-node Kubernetes clusters
-- **Educational Effectiveness**: Validated through expert review and simulation
+- **Educational Effectiveness**: Validated through expert review (4.4/5 average rating)
 
 ## Development
 
@@ -287,11 +287,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you use this code in your research, please cite our paper:
 
 ```bibtex
-@inproceedings{ai-augmented-cyber-lab-2024,
+@inproceedings{ai-augmented-cyber-lab-2025,
   title={AI-Augmented Cyber Labs: Enhancing Cloud-Native Security Education through Adaptive Feedback and Threat Simulation},
-  author={[Your Names]},
+  author={Akshay Mittal and Harsh Shah and Pragya Keshap},
   booktitle={Proceedings of the ACM Conference on Computer Science Education},
-  year={2024},
+  year={2025},
   publisher={ACM}
 }
 ```
@@ -300,6 +300,8 @@ If you use this code in your research, please cite our paper:
 
 For questions or support, please open an issue or contact:
 - Primary Author: akshay.mittal@ieee.org
+- Co-Author: hs634@cornell.edu
+- Co-Author: pragyakeshap@ieee.org
 
 ## 🙏 Acknowledgments
 
